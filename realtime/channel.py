@@ -52,7 +52,7 @@ class Channel:
         :return: None
         """
         join_req = dict(topic=self.topic, event="phx_join",
-                        payload={}, ref=None)
+                        payload={ 'access_token': self.params['access_token'] }, ref=None)
 
         try:
             await self.socket.ws_connection.send(json.dumps(join_req))
