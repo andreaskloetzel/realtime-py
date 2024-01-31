@@ -64,8 +64,13 @@ class Socket:
         :return: None
         """
         loop = asyncio.get_event_loop()  # TODO: replace with get_running_loop
-        loop.run_until_complete(asyncio.gather(self._listen(), self._keep_alive()))
-
+        # handle graceful shutdown
+        try:
+          loop.run_until_complete(asyncio.gather(self._listen(), self._keep_alive()))
+        except KeyboardInterrupt:
+          print("Keyboard Interrupt detedcted: Trying to shut down gracefully...")
+          loop.stop()
+    
     async def _listen(self) -> None:
         """
         An infinite loop that keeps listening.
